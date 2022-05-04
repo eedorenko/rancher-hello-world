@@ -48,6 +48,7 @@ jobs:
       - name: Read Image Tags
         run: |
           IMAGE_TAG=${{ needs.Build_Push_Image.outputs.image_tag }}
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV     
       - name: Echo Image Tags
         run: |
           echo ${{ env.IMAGE_TAG }} 
