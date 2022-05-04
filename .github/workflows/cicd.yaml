@@ -66,103 +66,43 @@ jobs:
         run: |        
           .github/workflows/utils//create-pr.sh -s ${{ github.workspace }}/gen_manifests -d ${{ secrets.MANIFESTS_FOLDER }} -r ${{ secrets.MANIFESTS_REPO }} -b ${{ secrets.MANIFESTS_BRANCH }} -i ${{ github.run_number }} -t ${{ secrets.PAT }} -e ${{ env.ENVIRONMENT_NAME }}          
 
+  Deploy_To_Prod:
+      runs-on: ubuntu-latest
+      needs: [Build_Push_Image, Deploy_To_Dev]
+      environment: prod            
+      env:
+        ENVIRONMENT_NAME: production
+      steps:
+      - name: Checkout Source
+        uses: actions/checkout@v2.3.4
+      - name: Read Image Tags
+        run: |
+          IMAGE_TAG=${{ needs.Build_Push_Image.outputs.image_tag }}
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          env      
+      - name: Echo Image Tags
+        run: |
+          echo ${{ env.IMAGE_TAG }} 
+          echo $IMAGE_TAG
+          echo ${{ needs.Build_Push_Image.outputs.image_tag }}          
+      - name: Generaate Manifests
+        run: |
+          .github/workflows/utils/generate-manifests.sh ${{ github.workspace }}/helm gen_manifests
+      - name: Create PR
+        run: |        
+          .github/workflows/utils//create-pr.sh -s ${{ github.workspace }}/gen_manifests -d ${{ secrets.MANIFESTS_FOLDER }} -r ${{ secrets.MANIFESTS_REPO }} -b ${{ secrets.MANIFESTS_BRANCH }} -i ${{ github.run_number }} -t ${{ secrets.PAT }} -e ${{ env.ENVIRONMENT_NAME }}          
 
-  # Deploy_To_Prod_Zarf:
-  #     runs-on: ubuntu-latest
-  #     needs: Deploy_To_Dev
-  #     environment: prod
-  #     steps:
-  #     - name: Read Image Tags
-  #       run: |
-  #         echo "IMAGE_TAG=$(cat ${{ github.workspace }}/IMAGE_TAG)" >> $GITHUB_ENV
-  #         echo $IMAGE_TAG 
-
-  #     - name: Prepare a package for Zarf 
-  #       run: |
-  #         echo $IMAGE_TAG 
-
-    # - name: Get Release Number
-    #   run: |
-    #     tag_number=$GITHUB_REF
-
-    #     # v1.0.0 -> 1-0-x
-    #     echo "RELEASE_NUMBER=$(echo $tag_number | awk -F"." '{print $1"-"$2"-x"}' | cut -c12-)" >> $GITHUB_ENV
-    #     echo "VERSION_NUMBER=$(echo $tag_number | cut -c12-)" >> $GITHUB_ENV
-        
-    
-    # - name: Sub-branch source code
-    #   run: |
-    #     echo $RELEASE_NUMBER
-    #     echo $VERSION_NUMBER
-    #     ./utils/subbranch.sh main release/$RELEASE_NUMBER
+  Package_Zarf:
+      runs-on: ubuntu-latest
+      needs: [Deploy_To_Prod]
+      environment: zarf            
+      steps:
+      - name: Update Image Tag
+        run: |        
+          echo "Update Image Tag with "zarf"
+      - name: Package Zarf archives
+        run: |        
+          echo "Package Zarf archives"
 
 
-    # - name: Checkout Manifests
-    #   uses: actions/checkout@v2
-    #   with: 
-    #     repository: ${{ github.repository_owner }}/${{ secrets.MANIFESTS_REPO_NAME }}
-    #     path: manifests
-    #     token: ${{ secrets.PAT }}
-    #     fetch-depth: 0
 
-    # - name: Sub-branch Dev 
-    #   run: |        
-    #     ./../utils/subbranch.sh dev release/$RELEASE_NUMBER/dev
-    #   working-directory: manifests
-
-    # - name: Sub-branch Stage 
-    #   run: |
-    #     ./../utils/subbranch.sh stage release/$RELEASE_NUMBER/stage
-    #   working-directory: manifests
-
-    # - name: Checkout Fleet
-    #   uses: actions/checkout@v2
-    #   with: 
-    #     repository: ${{ github.repository_owner }}/${{ secrets.FLEET_REPO_NAME }}
-    #     path: fleet
-    #     token: ${{ secrets.PAT }}
-    #     fetch-depth: 0
-
-    # - name: Setup Flux 
-    #   run: |        
-    #     curl -s https://fluxcd.io/install.sh | sudo bash
-
-    # - name: Add release to fleet in Dev 
-    #   run: |        
-    #     ./../utils/add-release-to-fleet.sh dev ${{ github.repository_owner }} $RELEASE_NUMBER ${{ secrets.MANIFESTS_REPO}} release/$RELEASE_NUMBER/dev
-    #   working-directory: fleet
-    
-    # - name: Create Pull Request to Dev fleet
-    #   uses: peter-evans/create-pull-request@v3
-    #   with: 
-    #     path: fleet
-    #     token: ${{ secrets.PAT }}
-    #     commit-message: add release ${{ env.RELEASE_NUMBER }} manifests for ${{ github.repository_owner }} to dev
-    #     title: add release ${{ env.RELEASE_NUMBER }} manifests for ${{ github.repository_owner }} to dev
-    #     branch: ${{ github.repository_owner }}/${{ env.RELEASE_NUMBER }}-dev
-
-    # - name: Add release to fleet in Stage 
-    #   run: |        
-    #     ./../utils/add-release-to-fleet.sh stage ${{ github.repository_owner }} $RELEASE_NUMBER ${{ secrets.MANIFESTS_REPO}} release/$RELEASE_NUMBER/stage
-    #   working-directory: fleet
-    
-    # - name: Create Pull Request to Stage fleet
-    #   uses: peter-evans/create-pull-request@v3
-    #   with: 
-    #     path: fleet
-    #     token: ${{ secrets.PAT }}
-    #     commit-message: add release ${{ env.RELEASE_NUMBER }} manifests for ${{ github.repository_owner }} to stage
-    #     title: add release ${{ env.RELEASE_NUMBER }} manifests for ${{ github.repository_owner }} to stage
-    #     branch: ${{ github.repository_owner }}/${{ env.RELEASE_NUMBER }}-stage
-
-    # - name: Generate Helm Charts
-    #   run: |
-    #     ./utils//generate-manifests.sh ${{ secrets.MANIFEST_ARTIFACT_PATH }} gen_manifests
-    #   env:
-    #     APP_VERSION: ${{ env.VERSION_NUMBER }}
-
-    # - name: Publish Helm Chart
-    #   run: |
-    #     ./utils//publish_helm_chart.sh gen_manifests/hld ${{ secrets.HELM_CHARTS_REPO_NAME }} ${{ secrets.HELM_CHARTS_URL }}
-    #   env:
-    #       TOKEN: ${{ secrets.HELM_CHARTS_PAT }}      
