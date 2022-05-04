@@ -50,13 +50,13 @@ jobs:
       needs: Build_Push_Image
       environment: dev
       steps:
-      - name: Download Image Tags
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          name: image_tags
-          # workflow: ci.yml
-          # run_id: ${{ github.event.workflow_run.id}}
-          path: ${{ github.workspace }}
+      # - name: Download Image Tags
+      #   uses: dawidd6/action-download-artifact@v2
+      #   with:
+      #     name: image_tags
+      #     # workflow: ci.yml
+      #     # run_id: ${{ github.event.workflow_run.id}}
+      #     path: ${{ github.workspace }}
       - name: Read Image Tags
         run: |
           echo "IMAGE_TAG=$(cat ${{ github.workspace }}/IMAGE_TAG)" >> $GITHUB_ENV          
