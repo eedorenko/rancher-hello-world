@@ -45,6 +45,8 @@ jobs:
       needs: Build_Push_Image
       environment: dev
       steps:
+      - name: Checkout Source
+        uses: actions/checkout@v2.3.4
       - name: Read Image Tags
         run: |
           IMAGE_TAG=${{ needs.Build_Push_Image.outputs.image_tag }}
@@ -56,7 +58,7 @@ jobs:
           echo ${{ needs.Build_Push_Image.outputs.image_tag }}          
       - name: Generaate Manifests
         run: |
-          ${{ github.workspace }}/.github/workflows/utils/generate-manifests.sh ${{ github.workspace }}/helm gen_manifests
+          .github/workflows/utils/generate-manifests.sh ${{ github.workspace }}/helm gen_manifests
       # - name: Create PR
       #   run: |        
       #     .github/workflows/utils//create-pr.sh -s ${{ github.workspace }}/gen_manifests -d ${{ secrets.MANIFESTS_FOLDER }} -r ${{ secrets.MANIFESTS_REPO }} -b ${{ secrets.MANIFESTS_BRANCH }} -i ${{ github.event.workflow_run.id}} -t ${{ secrets.MANIFESTS_PAT }} -e ${{ secrets.ENVIRONMENT_NAME }}
