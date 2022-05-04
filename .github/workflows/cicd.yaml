@@ -23,7 +23,8 @@ jobs:
     - name: Generate Image Tag
       id: generate_image_tag
       run: |
-          IMAGE_TAG=${{ secrets.MAJOR_VERSION }}.${{ secrets.MINOR_VERSION }}.${{ secrets.HF_VERSION }}-${{ github.run_number }}
+          # IMAGE_TAG=${{ secrets.MAJOR_VERSION }}.${{ secrets.MINOR_VERSION }}.${{ secrets.HF_VERSION }}-${{ github.run_number }}
+          IMAGE_TAG=11111
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV          
           echo $IMAGE_TAG > $GITHUB_WORKSPACE/IMAGE_TAG
           echo "::set-output name=image_tag::$IMAGE_TAG"
