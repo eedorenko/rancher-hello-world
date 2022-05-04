@@ -5,6 +5,9 @@ on:
     branches:
       - eedorenko/app-deploy-flow
 
+permissions:
+  packages: write
+
 jobs:
   Build_Push_Image:
     runs-on: ubuntu-latest
@@ -16,7 +19,7 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.PAT }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Generate Image Tag
       run: |
           IMAGE_TAG=${{ secrets.MAJOR_VERSION }}.${{ secrets.MINOR_VERSION }}.${{ secrets.HF_VERSION }}-${{ github.run_number }}
