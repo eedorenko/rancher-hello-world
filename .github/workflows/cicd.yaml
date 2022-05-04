@@ -43,14 +43,15 @@ jobs:
   Deploy_To_Dev:
       runs-on: ubuntu-latest
       needs: Build_Push_Image
-      environment: dev
+      environment: dev            
       steps:
       - name: Checkout Source
         uses: actions/checkout@v2.3.4
       - name: Read Image Tags
         run: |
           IMAGE_TAG=${{ needs.Build_Push_Image.outputs.image_tag }}
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV     
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          env      
       - name: Echo Image Tags
         run: |
           echo ${{ env.IMAGE_TAG }} 

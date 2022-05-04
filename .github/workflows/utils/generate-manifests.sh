@@ -25,6 +25,5 @@ if [ $? -gt 0 ]
   then
     echo "Could not render manifests"
     exit 1
-  fi
 fi
 
