@@ -54,6 +54,10 @@ jobs:
           echo ${{ env.IMAGE_TAG }} 
           echo $IMAGE_TAG
           echo ${{ needs.Build_Push_Image.outputs.image_tag }}          
+      - name: Generaate Manifests
+        run: |
+          .github/workflows/utils/generate-manifests.sh ${{ github.workspace }}/helm gen_manifests
+
 
   # Deploy_To_Prod_Zarf:
   #     runs-on: ubuntu-latest
