@@ -99,7 +99,7 @@ jobs:
       steps:
       - name: Update Image Tag
         run: |        
-          echo "Update Image Tag with "zarf"
+          echo "Update Image Tag with zarf"
       - name: Package Zarf archives
         run: |        
           echo "Package Zarf archives"
