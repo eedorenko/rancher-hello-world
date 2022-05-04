@@ -27,9 +27,6 @@ jobs:
       id: generate_image_tag
       run: |
           IMAGE_TAG=${{ env.SEM_VER }}-${{ github.run_number }}
-          # IMAGE_TAG=11111
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV          
-          echo $IMAGE_TAG > $GITHUB_WORKSPACE/IMAGE_TAG
           echo "::set-output name=image_tag::$IMAGE_TAG"
     - name: Build and Push to Docker Hub
       uses: docker/build-push-action@v2
@@ -37,13 +34,6 @@ jobs:
         push: true
         context: .
         tags: ghcr.io/eedorenko/rancher-hello-world:${{ env.IMAGE_TAG }}, ghcr.io/eedorenko/rancher-hello-world:latest  
-    # - name: Upload Image Tags
-    #   uses: actions/upload-artifact@v2.2.2
-    #   with:
-    #     name: image_tags
-    #     path: ${{ github.workspace }}/IMAGE_TAG        
-    # outputs:
-    #  image_tag: ${{ env.IMAGE_TAG }}
     outputs:
         image_tag: ${{ steps.generate_image_tag.outputs.image_tag }}
 
@@ -54,16 +44,9 @@ jobs:
       needs: Build_Push_Image
       environment: dev
       steps:
-      # - name: Download Image Tags
-      #   uses: dawidd6/action-download-artifact@v2
-      #   with:
-      #     name: image_tags
-      #     # workflow: ci.yml
-      #     # run_id: ${{ github.event.workflow_run.id}}
-      #     path: ${{ github.workspace }}
       - name: Read Image Tags
         run: |
-          echo "IMAGE_TAG=$(cat ${{ github.workspace }}/IMAGE_TAG)" >> $GITHUB_ENV          
+          IMAGE_TAG=${{ needs.Build_Push_Image.outputs.image_tag }}
       - name: Echo Image Tags
         run: |
           echo ${{ env.IMAGE_TAG }} 
