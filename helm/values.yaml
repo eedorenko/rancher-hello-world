@@ -3,3 +3,6 @@ app:
   workspace: kaizen 
 replicas: 1
 port: 80
+image: ghcr.io/eedorenko/rancher-hello-world:$IMAGE_TAG
+environment: $ENVIRONMENT_NAME
+
