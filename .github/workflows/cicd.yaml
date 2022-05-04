@@ -26,19 +26,23 @@ jobs:
           IMAGE_TAG=${{ secrets.MAJOR_VERSION }}.${{ secrets.MINOR_VERSION }}.${{ secrets.HF_VERSION }}-${{ github.run_number }}
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV          
           echo $IMAGE_TAG > $GITHUB_WORKSPACE/IMAGE_TAG
+          echo "::set-output name=image_tag::$IMAGE_TAG"
     - name: Build and Push to Docker Hub
       uses: docker/build-push-action@v2
       with:
         push: true
         context: .
         tags: ghcr.io/eedorenko/rancher-hello-world:${{ env.IMAGE_TAG }}, ghcr.io/eedorenko/rancher-hello-world:latest  
-    - name: Upload Image Tags
-      uses: actions/upload-artifact@v2.2.2
-      with:
-        name: image_tags
-        path: ${{ github.workspace }}/IMAGE_TAG        
+    # - name: Upload Image Tags
+    #   uses: actions/upload-artifact@v2.2.2
+    #   with:
+    #     name: image_tags
+    #     path: ${{ github.workspace }}/IMAGE_TAG        
     # outputs:
     #  image_tag: ${{ env.IMAGE_TAG }}
+    outputs:
+        image_tag: ${{ steps.generate_image_tag.outputs.image_tag }}
+
  
  
   Deploy_To_Dev:
@@ -60,7 +64,7 @@ jobs:
         run: |
           echo ${{ env.IMAGE_TAG }} 
           echo $IMAGE_TAG
-          echo ${{ needs.Build_Push_Image.outputs.image_tag }}
+          echo ${{ needs.Build_Push_Image.outputs.image_tag }}          
 
   Deploy_To_Prod_Zarf:
       runs-on: ubuntu-latest
