@@ -33,19 +33,22 @@ jobs:
         tags: ghcr.io/eedorenko/rancher-hello-world:${{ env.IMAGE_TAG }}, ghcr.io/eedorenko/rancher-hello-world:latest  
  
  
-  Dploy_To_Dev:
+  Deploy_To_Dev:
       runs-on: ubuntu-latest
       needs: Build_Push_Image
       environment: dev
       steps:
       - name: Read Image Tags
         run: |
-          echo "IMAGE_TAG=$(cat ${{ github.workspace }}/IMAGE_TAG)" >> $GITHUB_ENV
-          echo $IMAGE_TAG 
+          echo "IMAGE_TAG=$(cat ${{ github.workspace }}/IMAGE_TAG)" >> $GITHUB_ENV          
+      - name: Echo Image Tags
+        run: |
+          echo ${{ env.IMAGE_TAG }} 
+          echo $IMAGE_TAG
 
-  Dploy_To_Prod:
+  Deploy_To_Prod_Zarf:
       runs-on: ubuntu-latest
-      needs: Dploy_To_Dev
+      needs: Deploy_To_Dev
       environment: prod
       steps:
       - name: Read Image Tags
