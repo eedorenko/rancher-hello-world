@@ -26,7 +26,8 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        context: ./src
+        context: .
+        file: ./package/Dockerfile
         tags: ghcr.io/eedorenko/rancher-hello-world:${{ env.IMAGE_TAG }}, ghcr.io/eedorenko/rancher-hello-world:latest  
 
 
