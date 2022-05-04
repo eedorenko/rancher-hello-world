@@ -19,7 +19,7 @@ mkdir -p $2
 for file in `find $1 -type f \( -name "values.yaml" \)`; do envsubst <"$file" > "$file"1 && mv "$file"1 "$file"; done
 
 # Generate manifests
-helm template "$1" > $2$gen_manifests_file_name && \
+helm template "$1" > $2/$gen_manifests_file_name && \
 cat $2/$gen_manifests_file_name
 if [ $? -gt 0 ]
   then
