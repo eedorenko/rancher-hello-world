@@ -53,7 +53,7 @@ jobs:
         run: |
           echo ${{ env.IMAGE_TAG }} 
           echo $IMAGE_TAG
-          echo ${{ needs.Build_Push_Image.outputs.image_tag }}"
+          echo ${{ needs.Build_Push_Image.outputs.image_tag }}
 
   Deploy_To_Prod_Zarf:
       runs-on: ubuntu-latest
