@@ -16,7 +16,7 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ secrets.PAT }}
     - name: Generate Image Tag
       run: |
           IMAGE_TAG=${{ secrets.MAJOR_VERSION }}.${{ secrets.MINOR_VERSION }}.${{ secrets.HF_VERSION }}-${{ github.run_number }}
