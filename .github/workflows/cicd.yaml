@@ -27,7 +27,7 @@ jobs:
       with:
         push: true
         context: .
-        tags: ghcr.io/eedorenko/rancher-hello-world:${{ env.IMAGE_TAG }}, ghcr.io/eedorenko/rancher-hello-world:latest  
+        tags: ghcr.io/vyta/rancher-hello-world:${{ env.IMAGE_TAG }}, ghcr.io/vyta/rancher-hello-world:latest  
 
 
     # - name: Get Release Number
