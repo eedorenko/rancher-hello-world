@@ -27,3 +27,4 @@ if [ $? -gt 0 ]
     exit 1
 fi
 
+cd $2 && kustomize create --autodetect
