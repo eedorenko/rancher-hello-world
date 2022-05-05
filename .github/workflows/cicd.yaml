@@ -11,9 +11,7 @@ permissions:
 env:
   SEM_VER: 0.0.1
   APP_NAME: rancher-hello-world
-  IMAGE_NAME: ghcr.io/eedorenko/${{ env.APP_NAME }}
-  
-
+  IMAGE_NAME: ghcr.io/eedorenko/rancher-hello-world
 
 jobs:
   Build_Push_Image:
