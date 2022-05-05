@@ -19,7 +19,7 @@ jobs:
     - name: Package Zarf archives
       run: |        
         echo "Package Zarf archives"
-        export GH_REPO=${{ secrets.CP_REPO }} 
+        export GH_REPO="https://github.com/eedorenko/bigbang-control-plane"
         gh workflow run zarf-upload.yaml --ref eedorenko/app-deploy-flow -f cluster_names=dev-airplane -f version=1 -f version_overwrite=true
       env:
           GITHUB_TOKEN: ${{ secrets.CP_REPO_RENDER_TOKEN }}  
