@@ -6,6 +6,8 @@ metadata:
   annotations:
     version: {{  .Values.version}}
 spec:
+  strategy: 
+    type: Recreate      
   replicas: {{  .Values.replicas}}
   selector:
     matchLabels:
@@ -14,6 +16,8 @@ spec:
     metadata:
       labels:
         app: {{  .Values.app.name}}      
+      annotations:
+        version: {{  .Values.version}}
     spec:
       containers:
       - name: {{  .Values.app.name}}
