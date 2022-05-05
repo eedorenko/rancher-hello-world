@@ -19,8 +19,11 @@ jobs:
     - name: Package Zarf archives
       run: |        
         echo "Package Zarf archives"
-        export GH_REPO=$CP_REPO
-        GITHUB_TOKEN=$CP_REPO_RENDER_TOKEN gh workflow run zarf-upload.yaml --ref eedorenko/app-deploy-flow -f cluster_names=dev-airplane -f version=1
+        gh workflow run zarf-upload.yaml --ref eedorenko/app-deploy-flow -f cluster_names=dev-airplane -f version=1
+      env:
+          GITHUB_TOKEN: ${{ secrets.CP_REPO_RENDER_TOKEN }}  
+          GH_REPO: ${{ secrets.CP_REPO }}  
+          
     - name: Checkout Source
       uses: actions/checkout@v2.3.4
     - name: Login to ghcr
