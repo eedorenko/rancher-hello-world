@@ -10,7 +10,9 @@ permissions:
 
 env:
   SEM_VER: 0.0.1
-  IMAGE_NAME: ghcr.io/eedorenko/rancher-hello-world
+  APP_NAME: rancher-hello-world
+  IMAGE_NAME: ghcr.io/eedorenko/${{ env.APP_NAME }}
+  
 
 
 jobs:
@@ -20,7 +22,7 @@ jobs:
     - name: Package Zarf archives
       run: |        
         echo "Package Zarf archives"
-        gh workflow run zarf-upload.yaml --ref eedorenko/app-deploy-flow -f cluster_names=dev-airplane -f version=1 -f version_overwrite=true
+        gh workflow run zarf-upload.yaml --ref eedorenko/app-deploy-flow -f names=$APP_NAME -f scope=application -f version=$SEM_VER
       env:
           GITHUB_TOKEN: ${{ secrets.CP_REPO_RENDER_TOKEN }}  
           GH_REPO: ${{ secrets.CP_REPO }}
