@@ -17,7 +17,7 @@ const (
       button {
           background-color: #0075a8; 
           border: none;
-          color: yellow;
+          color: green;
           padding: 15px 32px;
           text-align: center;
           text-decoration: none;

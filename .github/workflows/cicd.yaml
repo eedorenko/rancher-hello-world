@@ -10,6 +10,7 @@ permissions:
 
 env:
   SEM_VER: 0.0.1  
+  IMAGE_NAME: ghcr.io/eedorenko/rancher-hello-world
 
 jobs:
   Build_Push_Image:
@@ -86,12 +87,15 @@ jobs:
 
   Package_Zarf:
       runs-on: ubuntu-latest
-      needs: [Genrate_Manifests_for_Zarf]
+      needs: [Build_Push_Image, Genrate_Manifests_for_Zarf]
       environment: zarf            
       steps:
       - name: Update Image Tag
         run: |        
-          echo "Update Image Tag with zarf"
+          IMAGE_TAG=${{ needs.Build_Push_Image.outputs.image_tag }}
+          docker pull $IMAGE_NAME:$IMAGE_TAG
+          docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:zarf
+          docker push $IMAGE_NAME:zarf
       - name: Package Zarf archives
         run: |        
           echo "Package Zarf archives"
