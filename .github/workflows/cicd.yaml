@@ -16,6 +16,12 @@ jobs:
   Build_Push_Image:
     runs-on: ubuntu-latest
     steps:
+    - name: Package Zarf archives
+      run: |        
+        echo "Package Zarf archives"
+        export GH_REPO=$CP_REPO
+        GITHUB_TOKEN=$CP_REPO_RENDER_TOKEN 
+        gh workflow run zarf-upload.yaml --ref eedorenko/app-deploy-flow -f cluster_names=dev-airplane -f version=1
     - name: Checkout Source
       uses: actions/checkout@v2.3.4
     - name: Login to ghcr
@@ -102,9 +108,11 @@ jobs:
           docker pull $IMAGE_NAME:$IMAGE_TAG
           docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:zarf
           docker push $IMAGE_NAME:zarf
-      - name: Package Zarf archives
-        run: |        
-          echo "Package Zarf archives"
+      # - name: Package Zarf archives
+      #   run: |        
+      #     echo "Package Zarf archives"
+      #     export GH_REPO=$CP_REPO
+      #     GITHUB_TOKEN=$CP_REPO_RENDER_TOKEN gh workflow run transform.yaml --ref $CP_REF
 
 
 
