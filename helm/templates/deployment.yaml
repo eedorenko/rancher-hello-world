@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: {{  .Values.app.name}}-deployment
   namespace: {{  .Values.app.workspace}}-{{  .Values.app.name}}-{{  .Values.environment}}
+  annotations:
+    version: {{  .Values.version}}
 spec:
   replicas: {{  .Values.replicas}}
   selector:
