@@ -19,7 +19,7 @@ jobs:
     - name: Package Zarf archives
       run: |        
         echo "Package Zarf archives"
-        gh workflow run zarf-upload.yaml --ref eedorenko/app-deploy-flow -f cluster_names=dev-airplane -f version=1 -f version_overwrite=1
+        gh workflow run zarf-upload.yaml --ref eedorenko/app-deploy-flow -f cluster_names=dev-airplane -f version=1 -f version_overwrite=true
       env:
           GITHUB_TOKEN: ${{ secrets.CP_REPO_RENDER_TOKEN }}  
           GH_REPO: ${{ secrets.CP_REPO }}  
