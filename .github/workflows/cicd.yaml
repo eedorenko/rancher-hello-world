@@ -12,6 +12,7 @@ env:
   SEM_VER: 0.0.1
   IMAGE_NAME: ghcr.io/eedorenko/rancher-hello-world
 
+
 jobs:
   Build_Push_Image:
     runs-on: ubuntu-latest
