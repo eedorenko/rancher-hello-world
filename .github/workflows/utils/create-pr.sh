@@ -75,8 +75,8 @@ if [[ `git status --porcelain | head -1` ]]; then
     
     owner_repo="${DEST_REPO#https://github.com/}"
     echo $owner_repo
-    GH_REPO=$owner_repo
-    GITHUB_TOKEN=$TOKEN
+    export GH_REPO=$repo
+    export GITHUB_TOKEN=$TOKEN
     # pr_response=$(curl -H "Authorization: token $TOKEN" -H "Content-Type: application/json" --fail \
     #    -d '{"head":"refs/heads/'$deploy_branch_name'", "base":"refs/heads/'$DEST_BRANCH'", "body":"Deploy to '$ENV_NAME'", "title":"deployment '$DEPLOY_ID'"}' \
     #    "https://api.github.com/repos/$owner_repo/pulls")
