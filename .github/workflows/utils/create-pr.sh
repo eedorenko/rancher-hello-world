@@ -27,7 +27,7 @@ echo $TOKEN
 echo $AUTO_MERGE
 echo "end of list"
 
-set -euo pipefail  # fail on error
+set -eo pipefail  # fail on error
 
 pr_user_name="Git Ops"
 pr_user_email="agent@gitops.com"
