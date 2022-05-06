@@ -16,3 +16,5 @@ deployments:
       branch: prod
       folder: rancher-hello-world
       zarf_image: ghcr.io/eedorenko/rancher-hello-world:zarf
+
+      
