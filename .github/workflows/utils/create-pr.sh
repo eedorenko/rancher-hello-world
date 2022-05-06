@@ -85,5 +85,7 @@ if [[ `git status --porcelain | head -1` ]]; then
     echo $pr_response
     pr_num="${pr_response##*pull/}"
     echo $pr_num
-    gh pr merge $pr_num --repo $repo_url --auto
+    echo $repo_url
+    # gh pr merge $pr_num --repo $repo_url --auto
+    gh pr merge $pr_num -m -d --repo $repo_url
 fi
