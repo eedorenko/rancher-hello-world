@@ -12,7 +12,6 @@ The binaries will be located in `/bin` for linux and `build/bin` for cross compi
 
 Run `make`.
 
-
 ### Mac & Windows Binaries
 
 Run `CROSS=1 make build`. 
