@@ -83,9 +83,9 @@ if [[ `git status --porcelain | head -1` ]]; then
     # echo $TOKEN | gh auth login --with-token 
     pr_response=$(gh pr create --repo $repo_url --base $DEST_BRANCH --head $deploy_branch_name --title "deployment $DEPLOY_ID" --body "Deploy to $ENV_NAME")
     echo $pr_response
-    pr_num="${pr_response##*pull/}"
-    echo $pr_num
-    echo $repo_url
-    # gh pr merge $pr_num --repo $repo_url --auto
-    gh pr merge $pr_num -m -d --repo $repo_url
+    if [ $AUTO_MERGE == 'Y']; then
+        pr_num="${pr_response##*pull/}"
+        echo $pr_num
+        gh pr merge $pr_num -m -d --repo $repo_url
+    fi
 fi
