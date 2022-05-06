@@ -1,0 +1,19 @@
+name: Asssign to environments
+
+on:
+  push:
+    branches:
+      - eedorenko/app-deploy-flow
+    paths:
+      - 'app.yaml'
+
+jobs:
+  Assign_to_environments:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run Coral transform
+      run: |        
+        gh workflow run transform.yaml --ref eedorenko/app-deploy-flow
+      env:
+          GITHUB_TOKEN: ${{ secrets.CP_REPO_TOKEN }}  
+          GH_REPO: ${{ secrets.CP_REPO }}
