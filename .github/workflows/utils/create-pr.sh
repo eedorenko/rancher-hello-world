@@ -3,7 +3,7 @@
 
 #!/usr/bin/env bash
 
-while getopts "s:d:r:b:i:t:e:p:" option;
+while getopts "s:d:r:b:i:t:e:m:" option;
     do
     case "$option" in
         s ) SOURCE_FOLDER=${OPTARG};;
@@ -76,14 +76,9 @@ if [[ `git status --porcelain | head -1` ]]; then
     owner_repo="${DEST_REPO#https://github.com/}"
     echo $owner_repo
     export GITHUB_TOKEN=$TOKEN
-    # pr_response=$(curl -H "Authorization: token $TOKEN" -H "Content-Type: application/json" --fail \
-    #    -d '{"head":"refs/heads/'$deploy_branch_name'", "base":"refs/heads/'$DEST_BRANCH'", "body":"Deploy to '$ENV_NAME'", "title":"deployment '$DEPLOY_ID'"}' \
-    #    "https://api.github.com/repos/$owner_repo/pulls")
-    # This cli is still very buggy:
-    # echo $TOKEN | gh auth login --with-token 
     pr_response=$(gh pr create --repo $repo_url --base $DEST_BRANCH --head $deploy_branch_name --title "deployment $DEPLOY_ID" --body "Deploy to $ENV_NAME")
     echo $pr_response
-    if [ ! -z "$AUTO_MERGE" && $AUTO_MERGE == 'Y']; then
+    if [$AUTO_MERGE == 'Y']; then
         pr_num="${pr_response##*pull/}"
         echo $pr_num
         gh pr merge $pr_num -m -d --repo $repo_url
