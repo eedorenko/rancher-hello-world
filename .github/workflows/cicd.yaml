@@ -63,7 +63,7 @@ jobs:
           .github/workflows/utils/generate-manifests.sh ${{ github.workspace }}/helm gen_manifests
       - name: Create PR
         run: |        
-          .github/workflows/utils//create-pr.sh -s ${{ github.workspace }}/gen_manifests -d ${{ secrets.MANIFESTS_FOLDER }} -r ${{ secrets.MANIFESTS_REPO }} -b ${{ secrets.MANIFESTS_BRANCH }} -i ${{ github.run_number }} -t ${{ secrets.PAT }} -e ${{ env.ENVIRONMENT_NAME }}          
+          .github/workflows/utils//create-pr.sh -s ${{ github.workspace }}/gen_manifests -d ${{ secrets.MANIFESTS_FOLDER }} -r ${{ secrets.MANIFESTS_REPO }} -b ${{ secrets.MANIFESTS_BRANCH }} -i ${{ github.run_number }} -t ${{ secrets.PAT }} -e ${{ env.ENVIRONMENT_NAME }} -m Y         
 
   Genrate_Manifests_for_Zarf:
       runs-on: ubuntu-latest
@@ -85,7 +85,7 @@ jobs:
           .github/workflows/utils/generate-manifests.sh ${{ github.workspace }}/helm gen_manifests
       - name: Create PR
         run: |        
-          .github/workflows/utils//create-pr.sh -s ${{ github.workspace }}/gen_manifests -d ${{ secrets.MANIFESTS_FOLDER }} -r ${{ secrets.MANIFESTS_REPO }} -b ${{ secrets.MANIFESTS_BRANCH }} -i ${{ github.run_number }} -t ${{ secrets.PAT }} -e ${{ env.ENVIRONMENT_NAME }} -m Y         
+          .github/workflows/utils//create-pr.sh -s ${{ github.workspace }}/gen_manifests -d ${{ secrets.MANIFESTS_FOLDER }} -r ${{ secrets.MANIFESTS_REPO }} -b ${{ secrets.MANIFESTS_BRANCH }} -i ${{ github.run_number }} -t ${{ secrets.PAT }} -e ${{ env.ENVIRONMENT_NAME }}         
 
 
   Package_Zarf:
