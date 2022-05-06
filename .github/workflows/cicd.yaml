@@ -111,7 +111,7 @@ jobs:
           echo "Package Zarf archives"
           gh workflow run zarf-upload.yaml --ref eedorenko/app-deploy-flow -f names=$APP_NAME -f app_workspace=$WORKSPACE_NAME -f scope=application -f version=$IMAGE_TAG
         env:
-            GITHUB_TOKEN: ${{ secrets.CP_REPO_RENDER_TOKEN }}  
+            GITHUB_TOKEN: ${{ secrets.CP_REPO_TOKEN }}  
             GH_REPO: ${{ secrets.CP_REPO }}
 
 
