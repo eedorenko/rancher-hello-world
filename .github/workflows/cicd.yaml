@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - eedorenko/app-deploy-flow
+    paths-ignore:
+      - 'app.yaml'
 
 permissions:
   packages: write
