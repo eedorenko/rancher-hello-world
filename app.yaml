@@ -7,7 +7,7 @@ deployments:
       repository: https://github.com/kaizentm/gitops-manifests
       branch: dev
       folder: rancher-hello-world
-      zarf_image: kaizentm//hello-world:zarf
+      zarf_image: ghcr.io/eedorenko/rancher-hello-world:zarf
   production:
     target: production
     clusters: 1
@@ -15,4 +15,4 @@ deployments:
       repository: https://github.com/kaizentm/gitops-manifests
       branch: prod
       folder: rancher-hello-world
-      zarf_image: kaizentm//hello-world:zarf
+      zarf_image: ghcr.io/eedorenko/rancher-hello-world:zarf
