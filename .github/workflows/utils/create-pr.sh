@@ -81,6 +81,7 @@ if [[ `git status --porcelain | head -1` ]]; then
     #    "https://api.github.com/repos/$owner_repo/pulls")
     # This cli is still very buggy:
     # echo $TOKEN | gh auth login --with-token 
-    pr_response=$(gh pr create --repo $repo_url --base $DEST_BRANCH --head $deploy_branch_name --title "deployment '$DEPLOY_ID'" --body "Deploy to '$ENV_NAME'")
+    pr_response=$(gh pr create --repo $repo_url --base $DEST_BRANCH --head $deploy_branch_name --title "deployment $DEPLOY_ID" --body "Deploy to $ENV_NAME  ")
     echo $pr_response
+    gh pr merge --repo $repo_url $pr_response
 fi 
