@@ -1,6 +1,6 @@
 app:
   name: rancher-hello-world
-  workspace: kaizen 
+  workspace: coral-applications 
 replicas: 1
 port: 80
 image: $IMAGE_NAME:$IMAGE_TAG

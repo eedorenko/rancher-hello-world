@@ -1,9 +1,14 @@
 name: Asssign to environments
 
 on:
-  push:
-    branches:
-      - eedorenko/app-deploy-flow
+  push:    
+    # To enabl th workflow, uncomment the lines below and remove `branches-ignore`.
+    # The workflow will run on any change to `app.yaml` which will invoke the `transform` workflow in the Control Plane Repo.
+    # It may be needed if we want to update environments where the application is about to be deployed and/or change application manifests storage.
+    # branches:
+    #   - main
+    branches-ignore:
+      - '**'      
     paths:
       - 'app.yaml'
 
@@ -13,7 +18,7 @@ jobs:
     steps:
     - name: Run Coral transform
       run: |        
-        gh workflow run transform.yaml --ref eedorenko/app-deploy-flow
+        gh workflow run transform.yaml
       env:
           GITHUB_TOKEN: ${{ secrets.CP_REPO_TOKEN }}  
           GH_REPO: ${{ secrets.CP_REPO }}

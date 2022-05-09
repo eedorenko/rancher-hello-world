@@ -1,100 +1,65 @@
 Hello world
 ===========
 
-This image runs hello-world web service in 80 port used for demoing and/or testing. It shows data about hostname, k8s services and request headers. 
+This is a source code repository with a sample application for which an App Dev team runs a regular SDLC. The repository contains a simple Go "Hello World" application forked from [rancher repository](https://github.com/rancher/hello-world). It also contains [Dockerfile](Dockerfile), [manifests helm templates](./helm) and a [CI/CD GH Actions workflow](.github/workflows/cicd.yaml).
 
-## Building from Source
+## App.yaml
 
-The binaries will be located in `/bin` for linux and `build/bin` for cross compiling.
+There is an [application descriptor](app.yaml) that App Dev team provides to the Platform Team. It describes to what targets/environments the application is supposed to be deployed during the SDLC and it defines where (repo/branch/folder) the manifests for each target are stored. 
 
-### Linux Binary
-
-
-Run `make`.
-
-### Mac & Windows Binaries
-
-Run `CROSS=1 make build`. 
-
-## Building Docker Image
-
-To build `rancher/hello-world`, run `make`.  To use a custom Docker repository, do `REPO=custom make`, which produces a `custom/hello-world` image.
-
-## Running Docker Image
-
-### Docker
-
-Run `docker run -td -p <PORT>:80 rancher/hello-world`.
-
-### K8s
-
-Deployment manifest
 ```
-apiVersion: apps/v1beta2
-kind: Deployment
-metadata:
-  labels:
-    app: hello-world
-  name: hello-world
-  namespace: default
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: hello-world
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: hello-world
-    spec:
-      containers:
-      - image: rancher/hello-world
-        imagePullPolicy: Always
-        name: hello-world
-        ports:
-        - containerPort: 80
-          protocol: TCP
-      restartPolicy: Always
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: hello-world
-  namespace: default
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 80
-  selector:
-    app: hello-world
+template: app-manifests
+deployments:
+  development:
+    target: development
+    clusters: 1
+    values:
+      repository: https://github.com/[GITHUB-OWNER]/[GITHUB-REPO]
+      branch: dev
+      folder: rancher-hello-world
+      zarf_image: [IMAGE_NAME]:zarf
+  production:
+    target: production
+    clusters: 1
+    values:
+      repository: cc
+      branch: prod
+      folder: rancher-hello-world
+      zarf_image: [IMAGE_NAME]:zarf      
 ```
 
-Run `kubectl apply -f <DEPLOY_MANIFEST>`
+## CI/CD flow
 
-## Contact
+The CI/CD workflow contains the following stages:
 
-For bugs, questions, comments, corrections, suggestions, etc., open an issue in
-[rancher/rancher](//github.com/rancher/rancher/issues) with a title prefix of `[hello-world] `.
+ ![ci-cd](./img/ci-cd.png)
 
-Or just [click here](//github.com/rancher/rancher/issues/new?title=%5Bhello-world%5D%20) to create a new issue.
+ |Stage|Description|
+ |-----|-----------|
+ |Build and Push Image|Builds and pushes an image to the container registry. The tag is generated as SEM_VER-BUILD_NUM (e.g. 0.0.1-92)}
+ |Deploy to Dev|Generates manifests with [Helm templates](./helm/) and PRs the manifests to the GitOps repo in `dev` branch under `rancher-hello-world` folder. The PR is auto-merged|
+ |Generate Manifests to Zarf|Generates manifests with [Helm templates](./helm/) and PRs the manifests to the GitOps repo in `dev` branch under `rancher-hello-world` folder. This PR is supposed to be reviewed and merged|
+ |Package Zarf| Tags the new image with `zarf` and invokes a workflow in the Control Plane Repo that creates a Zarf package containing application `prod` manifests and `zarf` image and uploads the package to Azure Storage|
 
-## License
-Copyright (c) 2014-2018 [Rancher Labs, Inc.](http://rancher.com)
+ _*Note*_: The CI/CD workflow can successfully run after [customizations](#customizations) have been made and the application has been registered by the Platform Team in the Control Plane Repo.  
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
 
-[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+## Customizations
+Once you have [migrated the repo to GitHub](#migrate-to-github), you need to make some customizations specific to your setup:
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+- In [app.yaml](app.yaml) update `manifests repo` (e.g. https://github.com/app-dev-team/missionedge-appdev-sample-manifests)
+- Create [environments](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#creating-an-environment) in the GitHub repo: `dev`, `prod`, `zarf`. 
+- Protect `prod` and `zarf` environments with [Required reviewers](https://docs.github.com/en/actions/managing-workflow-runs/reviewing-deployments).
+- Update GitHub secrets:
+
+|Secret|Description|Scope|
+|------|-----------|-----|
+|MANIFESTS_REPO| Manifests repo URL (e.g. https://github.com/app-dev-team/missionedge-appdev-sample-manifests)| Repository|
+|MANIFESTS_FOLDER| Folder with manifests in the manifests repo (e.g. `rancher-hello-world`)| Repository|
+|MANIFESTS_TOKEN| Token to PR to the manifests repo| Repository|
+  
+
+## Migrate to GitHub
+
+The repo is supposed to work in GitHub environment. There are tons of recommendations, command lines, tools to migrate Azure DevOps repos to GitHub.
+Perhaps, the easiest way to do that is described here https://youtu.be/NjQhiVvTOds?t=53.
