@@ -57,7 +57,7 @@ Once you have [migrated the repo to GitHub](#migrate-to-github), you need to mak
 |MANIFESTS_REPO| Manifests repo URL (e.g. https://github.com/app-dev-team/missionedge-appdev-sample-manifests)| Repository|
 |MANIFESTS_FOLDER| Folder with manifests in the manifests repo (e.g. `rancher-hello-world`)| Repository|
 |MANIFESTS_TOKEN| Token to PR to the manifests repo| Repository|
-  
+|IMAGE_NAME| Image name (e.g. `ghcr.io/app-dev-team/rancher-hello-world`)|   
 
 ## Migrate to GitHub
 
